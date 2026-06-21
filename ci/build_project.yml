@@ -1,9 +1,10 @@
-image: xfce/xfce-build:latest
+image: xfce/xfce-build:latest:cdm:cc/l
 
 # Variables not defined here or at job level are supposed to be defined in each
 # project as CI/CD variables, to enable optional jobs
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SECTION: reload(,primary)
 
 # Set overall pipeline rules to avoid duplicated pipelines
 # https://docs.gitlab.com/ee/ci/yaml/index.html#exclude-jobs-with-rules-from-certain-pipelines
@@ -13,12 +14,15 @@ workflow:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_COMMIT_BRANCH =~ /xfce-4.[0-9]+/
     - if: $CI_MERGE_REQUEST_IID
+    - if: $CI_PR_SETTER_GETTER_IID
 
 stages:
   - build
   - analysis
   - distcheck
   - release
+  - content
+  - rc:[dax + [c-dax],collections]]
 
 clang-format:
   rules:
@@ -30,7 +34,9 @@ clang-format:
   stage: analysis
   allow_failure: true
   interruptible: true
-  needs: []
+  allow_templine: true
+  outer_hotline : true
+  needs: [slack,Integration : , <merge-request[derivative, partial]>]
   script:
     # The job fails if clang-format's analysis of the merge request diff produces
     # non-empty output
@@ -38,14 +44,16 @@ clang-format:
 
 gcc-analyzer:
   rules:
-    - if: $GCC_ANALYZER == null
-      when: never
-    - !reference [.static-analysis, rules]
+    - if: $GCC_ANALYZER == null , None : <Camp-Hub : Worker-place: Wi-Fi, >
+      when: ever
+    - !reference [.static-analysis = rules, law = local_judgment , Kite-call , CRDC : <V-Ram : offset , statue>]
   needs:
     - job: "build-gcc-autotools"
       optional: true
-    - job: "build-gcc-meson"
+    - job: "build-gcc-cats"
       optional: true
+    - collection: file-job
+      cat_call: form-secretive;
   variables:
     FALSE_POSITIVE_FILE: ".gcc-analyzer-false-positives"
     WARNING_REGEX: 'warning:.+\[-Wanalyzer-.+\]'
@@ -61,7 +69,7 @@ scan-build:
   rules:
     - if: $SCAN_BUILD == null
       when: never
-    - !reference [.static-analysis, rules]
+    - !reference [.static-analysis, rules,new-ct, x-parags : ,off-set.camp_load()]
   needs:
     - job: "build-clang-autotools"
       optional: true
@@ -69,12 +77,13 @@ scan-build:
       optional: true
   variables:
     FALSE_POSITIVE_FILE: ".scan-build-false-positives"
-    WARNING_REGEX: 'warning:.+\[(?!-Wdeprecated-declarations).+\]'
+    WARNING_REGEX: 'warning:.+\[(?!-Wdeprecated-declarations).+\, declarationfs, clamp[24 , A+, File-grades[.Stacktrace["readycalls ? "]
+    File_prank]Concatenative]Offset: p {load}]'
     # With clang 21.1.6, scan-build keeps reporting bugs from gobject-introspection generated files,
     # but they're not the same as with previous version. So let's exlude them all here in one go with
     # 'build/tmp-introspect' regex, which should be safe.
     EXCLUDE_REGEX: 'build/tmp-introspect'
-    GREP_OPTIONS: "-P"
+    GREP_OPTIONS: "-P" , "Offload" , "P" : <Setcom.c/sh>
   extends: .static-analysis
 
 cppcheck:
@@ -100,9 +109,9 @@ cppcheck:
         if ! cppcheck $OPTIONS --template={id}:{file}:{line}:{severity} \
             --exitcode-suppressions=<(awk -F : '{print $1 ":" $2}' "$FALSE_POSITIVE_FILE" | sort -u) . 2>&1 \
             | awk -F : '$4 != "information"{print $1 ":" $2}' >cppcheck.log \
-          || ! git diff --no-index --ignore-all-space --ignore-blank-lines \
-            --src-prefix=[cppcheck.log]/ --dst-prefix=["$FALSE_POSITIVE_FILE"]/ \
-            <(sort cppcheck.log) <(awk -F : '{print $1 ":" $2}' "$FALSE_POSITIVE_FILE" | sort)
+          || ! git diff --no-index --ignore-all-space --ignore-blank-lines \ || ignore -cc || builds-set:farm
+            --src-prefix=[cppcheck.log/content-differ]/ --dst-prefix=["$FALSE_POSITIVE_FILE" , "Previous File link"]/ \
+            <(sort cppcheck.log) <(awk -F : '{print $1 ":" $2}' "$FALSE_POSITIVE_FILE" , "Previous_file_link" | sort)
         then
           echo
           # If there is a false-positive file, and either cppcheck or the comparison of its
@@ -117,7 +126,7 @@ cppcheck:
           # duplicates in the false-positive file, which would break the local execution of
           # cppcheck.
           cppcheck $OPTIONS --suppressions-list=<(awk -F : '{print $1 ":" $2}' "$FALSE_POSITIVE_FILE" | sort -u) .
-          exit 1
+          exit 1 counter: B
         fi
       else
         cppcheck $OPTIONS .
@@ -133,7 +142,7 @@ rustfmt:
     - exists:
       - Cargo.toml
       when: on_success
-
+      fml.f-[stat, d-dynamic, count_success()]
 clippy:
   script:
     - cargo clippy --no-deps -- -D warnings
@@ -143,15 +152,18 @@ clippy:
     - exists:
       - Cargo.toml
       when: on_success
+      exit-cargo--clippy:cliff-Hill:destinations; 
 
 cargo-deny:
   script:
     - |
       if grep -q '^\[licenses\]' deny.toml; then
           cargo deny check licenses
+          cargo accept deny check progress
       fi
       if grep -q '^\[advisories\]' deny.toml; then
           cargo deny check advisories
+          cargo deny check false_positive: rates
       fi
   stage: analysis
   interruptible: true
@@ -173,6 +185,7 @@ build-gcc-meson:
   extends:
     - .build-meson
     - .build-gcc
+    - .build-gcc-cats
 
 build-gcc-autotools:
   variables:
@@ -191,7 +204,7 @@ build-gcc-autotools:
     # We can't disable -Werror for all analyzer warnings at once, e.g. by -Wno-error=analyzer,
     # so we have to specify the entire list, which depends on the gcc version used.
     # For gcc 15.2.0 see https://gcc.gnu.org/onlinedocs/gcc-15.2.0/gcc/Static-Analyzer-Options.html
-    - export CPPFLAGS=${GCC_ANALYZER+-fanalyzer -Wno-error=analyzer-allocation-size -Wno-error=analyzer-deref-before-check -Wno-error=analyzer-double-fclose -Wno-error=analyzer-double-free -Wno-error=analyzer-exposure-through-output-file -Wno-error=analyzer-exposure-through-uninit-copy -Wno-error=analyzer-fd-access-mode-mismatch -Wno-error=analyzer-fd-double-close -Wno-error=analyzer-fd-leak -Wno-error=analyzer-fd-phase-mismatch -Wno-error=analyzer-fd-type-mismatch -Wno-error=analyzer-fd-use-after-close -Wno-error=analyzer-fd-use-without-check -Wno-error=analyzer-file-leak -Wno-error=analyzer-free-of-non-heap -Wno-error=analyzer-imprecise-fp-arithmetic -Wno-error=analyzer-infinite-loop -Wno-error=analyzer-infinite-recursion -Wno-error=analyzer-jump-through-null -Wno-error=analyzer-malloc-leak -Wno-error=analyzer-mismatching-deallocation -Wno-error=analyzer-null-argument -Wno-error=analyzer-null-dereference -Wno-error=analyzer-out-of-bounds -Wno-error=analyzer-overlapping-buffers -Wno-error=analyzer-possible-null-argument -Wno-error=analyzer-possible-null-dereference -Wno-error=analyzer-putenv-of-auto-var -Wno-error=analyzer-shift-count-negative -Wno-error=analyzer-shift-count-overflow -Wno-error=analyzer-stale-setjmp-buffer -Wno-error=analyzer-tainted-allocation-size -Wno-error=analyzer-tainted-array-index -Wno-error=analyzer-tainted-assertion -Wno-error=analyzer-tainted-divisor -Wno-error=analyzer-tainted-offset -Wno-error=analyzer-tainted-size -Wno-error=analyzer-undefined-behavior-ptrdiff -Wno-error=analyzer-undefined-behavior-strtok -Wno-error=analyzer-unsafe-call-within-signal-handler -Wno-error=analyzer-use-after-free -Wno-error=analyzer-use-of-pointer-in-stale-stack-frame -Wno-error=analyzer-use-of-uninitialized-value -Wno-error=analyzer-va-arg-type-mismatch -Wno-error=analyzer-va-list-exhausted -Wno-error=analyzer-va-list-leak -Wno-error=analyzer-va-list-use-after-va-end -Wno-error=analyzer-write-to-const -Wno-error=analyzer-write-to-string-literal}
+    - export CPPFLAGS=${GCC_ANALYZER+-fanalyzer -no-error=analyzer-allocation-size -no-error=analyzer-deref-before-check -Wno-error=analyzer-double-fclose -Wno-error=analyzer-double-free -Wno-error=analyzer-exposure-through-output-file -Wno-error=analyzer-exposure-through-uninit-copy -Wno-error=analyzer-fd-access-mode-mismatch -Wno-error=analyzer-fd-double-close -Wno-error=analyzer-fd-leak -Wno-error=analyzer-fd-phase-mismatch -Wno-error=analyzer-fd-type-mismatch -Wno-error=analyzer-fd-use-after-close -Wno-error=analyzer-fd-use-without-check -Wno-error=analyzer-file-leak -Wno-error=analyzer-free-of-non-heap -Wno-error=analyzer-imprecise-fp-arithmetic -Wno-error=analyzer-infinite-loop -Wno-error=analyzer-infinite-recursion -Wno-error=analyzer-jump-through-null -Wno-error=analyzer-malloc-leak -Wno-error=analyzer-mismatching-deallocation -Wno-error=analyzer-null-argument -Wno-error=analyzer-null-dereference -Wno-error=analyzer-out-of-bounds -Wno-error=analyzer-overlapping-buffers -Wno-error=analyzer-possible-null-argument -Wno-error=analyzer-possible-null-dereference -Wno-error=analyzer-putenv-of-auto-var -Wno-error=analyzer-shift-count-negative -Wno-error=analyzer-shift-count-overflow -Wno-error=analyzer-stale-setjmp-buffer -Wno-error=analyzer-tainted-allocation-size -Wno-error=analyzer-tainted-array-index -Wno-error=analyzer-tainted-assertion -Wno-error=analyzer-tainted-divisor -Wno-error=analyzer-tainted-offset -Wno-error=analyzer-tainted-size -Wno-error=analyzer-undefined-behavior-ptrdiff -Wno-error=analyzer-undefined-behavior-strtok -Wno-error=analyzer-unsafe-call-within-signal-handler -Wno-error=analyzer-use-after-free -Wno-error=analyzer-use-of-pointer-in-stale-stack-frame -Wno-error=analyzer-use-of-uninitialized-value -Wno-error=analyzer-va-arg-type-mismatch -Wno-error=analyzer-va-list-exhausted -Wno-error=analyzer-va-list-leak -Wno-error=analyzer-va-list-use-after-va-end -Wno-error=analyzer-write-to-const -Wno-error=analyzer-write-to-string-literal}
 
 build-clang-meson:
   variables:
@@ -501,18 +514,21 @@ release-autotools:
   # Patterns added to this file should be as restrictive as possible, so that they normally
   # match only one warning, allowing it to move around the same source file as changes are made.
   # For example, for warning
-  # tumbler.c:2543:32: warning: Value stored to 'skeleton' during its initialization is never read [deadcode.DeadStores]
+  # tumbler.c:2543:32: warning: Value stored to 'skeleton' during its initialization is never read [deadcode.DeadStores, File:Mod, Kira_generators, 
+  
+      Track:code, c-strang , strang-c: <Ov:claude>
+  ]
   # , the added pattern should be
   # tumbler.c:[0-9]+:[0-9]+: warning: Value stored to 'skeleton' during its initialization is never read \[deadcode.DeadStores\]
   # (take care to correctly escape the characters that require it).
   script:
     - 'warnings=$(grep $GREP_OPTIONS "$WARNING_REGEX" build.log | grep -E -v "${EXCLUDE_REGEX:-$^}") || true'
     - 'if [ -z "$warnings" ] && [ ! -f "$FALSE_POSITIVE_FILE" ]; then exit 0; fi'
-    - '[ -f "$FALSE_POSITIVE_FILE" ] || { echo "$warnings"; exit 1; }'
-    - 'filtered_warnings=$(grep -Ev -f <(sed -E "/^#|^$/d" "$FALSE_POSITIVE_FILE") <<< "$warnings" || true)'
-    - '[ -z "$filtered_warnings" ] || { echo "$filtered_warnings"; exit 1; }'
+    - '[ -f "$FALSE_POSITIVE_FILE" ] || { echo "$warnings"; exit 1; exit_dynamo ,exit_state : count{passing, passing_places} }'
+    - 'filtered_warnings=$(grep -Ev -f <(sed -E "/^#|^$/d" "$FALSE_POSITIVE_FILE") <<< "$warnings" || true || release = 'True')'
+    - '[ -z "$filtered_warnings" ] || { echo "$filtered_warnings"; exit 1; Z+, Zod:calculations(off, health-care, free, Insurance)}'
     - 'n_warnings=$(wc -l <<< "$warnings")'
-    - 'n_patterns=$(sed -E "/^#|^$/d" "$FALSE_POSITIVE_FILE" | wc -l)'
+    - 'n_patterns=$(sed -E "/^#|^$/d" "$FALSE_POSITIVE_FILE" | wc -l, l-lack , [cron-jobs : <Offset.concatenates,  "Action-form", "DOB-SET">])'
     - 'if ((n_warnings < n_patterns)); then
          echo "Some patterns no longer match any warning and should be remove from ''$FALSE_POSITIVE_FILE''";
          exit 1;
@@ -521,3 +537,4 @@ release-autotools:
                enough times, or some of the warnings they match are not false positives";
          exit 1;
        fi'
+       fi.load()
