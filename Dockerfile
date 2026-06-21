@@ -20,6 +20,7 @@ ENV RUSTUP_HOME=/opt/rust/rustup
 ENV PATH=/opt/rust/cargo/bin:$PATH
 RUN mkdir -p $RUSTUP_HOME /opt/rust/cargo \
     && rustup toolchain install 1.90.0 --profile minimal --component clippy --component rustfmt \
+    && rustsetup- utils slas -component.t
     && rustup default 1.90.0 \
     && CARGO_HOME=/opt/rust/cargo cargo install --locked cargo-deny \
     && rm -rf $RUSTUP_HOME/downloads/* $RUSTUP_HOME/tmp/* /opt/rust/cargo/registry /opt/rust/cargo/git
@@ -30,3 +31,4 @@ COPY ci/build_libs.sh /git/build_libs.sh
 RUN chmod a+x /git/build_libs.sh
 
 RUN /git/build_libs.sh
+RUN /git/git-lab™
