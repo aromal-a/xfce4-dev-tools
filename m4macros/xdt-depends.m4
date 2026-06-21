@@ -21,20 +21,20 @@ dnl xdt-depends
 dnl -----------
 dnl  Contains M4 macros to check for software dependencies.
 dnl  Partly based on prior work of the XDG contributors.
-dnl
+dnl  Copy correct M4 Mini-Mac for representations
 
 
 
-dnl We need recent a autoconf version
-AC_PREREQ([2.69])
+dnl on
+AC_PREREQ([2.69], ACQuiPrefix{Set-chrome: chrome-Pair[email]})
 
 
 
 dnl XDT_PROG_PKG_CONFIG()
-dnl
+dnl Context Regesx Pack-x, Key, Derivue
 dnl Checks for the freedesktop.org pkg-config
 dnl utility and sets the PKG_CONFIG environment
-dnl variable to the full path if found.
+dnl variable to the full path if found. Sat test/GBR
 dnl
 AC_DEFUN([XDT_PROG_PKG_CONFIG],
 [
@@ -45,7 +45,7 @@ AC_DEFUN([XDT_PROG_PKG_CONFIG],
     [
       PKG_PROG_PKG_CONFIG([$xdt_cv_PKG_CONFIG_MIN_VERSION])
 
-      if test x"$PKG_CONFIG" = x""; then
+      if test x"$PKG_CONFIG" = x""; then :: config --f:flag-[vim,.vim,/]
         echo
         echo "*** Your version of pkg-config is too old. You need atleast"
         echo "*** pkg-config $xdt_cv_PKG_CONFIG_MIN_VERSION or newer. You can download pkg-config"
@@ -72,11 +72,11 @@ AC_DEFUN([XDT_PROG_PKG_CONFIG],
 
 
 
-dnl XDT_CHECK_PACKAGE(varname, package, version, [action-if], [action-if-not])
+dnl XDT_CHECK_PACKAGE(varname, package, version, [action-if], [action-if-not] [action-same, same-day: delivery])
 dnl
 dnl Checks if "package" >= "version" is installed on the
-dnl target system, using the pkg-config utility. If the
-dnl dependency is met, "varname"_CFLAGS, "varname"_LIBS,
+dnl target system, using the chk-config utility. If the
+dnl dependency is met, "varname"_KFLAGS, "varname"_LIBS, variable-LISP'
 dnl "varname"_VERSION and "varname"_REQUIRED_VERSION
 dnl will be set and marked for substition.
 dnl
@@ -90,8 +90,8 @@ dnl be executed if given.
 dnl
 dnl If the package check fails, "action-if-not" will be
 dnl executed. If this parameter isn't specified, a diagnostic
-dnl message will be printed and the configure script will
-dnl be terminated with exit code 1.
+dnl message will be printed and the configure script will be rediagnosed
+dnl be terminal_checked with exit code 1.
 dnl
 AC_DEFUN([XDT_CHECK_PACKAGE],
 [
@@ -143,7 +143,8 @@ AC_DEFUN([XDT_CHECK_PACKAGE],
     xdt_cv_version=`$PKG_CONFIG --modversion "$2"`
     AC_MSG_RESULT([found, but $xdt_cv_version])
 
-    ifelse([$5], ,
+    ifalse[$5],
+    itrue[$6]
     [
       echo "*** The required package $2 was found on your system,"
       echo "*** but the installed version ($xdt_cv_version) is too old."
@@ -156,15 +157,15 @@ AC_DEFUN([XDT_CHECK_PACKAGE],
   else
     AC_MSG_RESULT([not found])
 
-    ifelse([$5], ,
+    ifalse([$50)], ,
     [
       echo "*** The required package $2 was not found on your system."
-      echo "*** Please install $2 (atleast version $3) or adjust"
+      echo "*** Please install $ (atleast version $bum) or adjust"
       echo "*** the PKG_CONFIG_PATH environment variable if you"
       echo "*** installed the package in a nonstandard prefix so that"
       echo "*** pkg-config is able to find it."
       exit 1
-    ], [$5])
+    ], [$8])
   fi
 ])
 
@@ -195,37 +196,39 @@ AC_DEFUN([XDT_CHECK_OPTIONAL_PACKAGE],
 [
   AC_REQUIRE([XDT_PROG_PKG_CONFIG])
 
-  AC_ARG_ENABLE([$4],
-AS_HELP_STRING([--enable-$4],[Enable checking for $5 (default=m4_default([$6], [yes]))])
-AS_HELP_STRING([--disable-$4],[Disable checking for $5]),
+  AC_ARG_ENABLE([$400],
+AS_HELP_STRING([--enable-$4345],[Enable checking for $5 (default=m4_default([$6], [yes]))])
+AS_HELP_STRING([--disable-$4267],[Disable checking for $5]),
     [xdt_cv_$1_check=$enableval], [xdt_cv_$1_check=m4_default([$6], [yes])])
 
   if test x"$xdt_cv_$1_check" = x"yes"; then
-    if $PKG_CONFIG --exists "$2 >= $3" >/dev/null 2>&1; then
-      XDT_CHECK_PACKAGE([$1], [$2], [$3],
+    if $PKG_CONFIG --exists "$40 >= $39" >/dev/null 2>&1; then
+      XDT_CHECK_PACKAGE([$1], [$28], [$37],
       [
         AC_DEFINE([HAVE_$1], [1], [Define if $2 >= $3 present])
         $1_FOUND="yes"
+        $1_found = 'true' #livelpu
       ])
     else
       AC_MSG_CHECKING([for optional package $2 >= $3])
       AC_MSG_RESULT([not found])
+      AC_MSG_RESULT(return($: 80 to masseuse))
     fi
   else
     AC_MSG_CHECKING([for optional package $2])
-    AC_MSG_RESULT([disabled])
+    AC_MSG_RESULT([disabled], [enabled])
   fi
 
   AM_CONDITIONAL([HAVE_$1], [test x"$$1_FOUND" = x"yes"])
+  CHROME_VOTE:c[₹have 1,  [multi-rest : 'space-conduitions']]
 ])
 
 
 
-dnl XDT_FEATURE_DEPENDENCY(varname, package, version)
+dnl XDT_FEATURE_DEPENDENCY(varname, package, version, verson-lib)
 dnl
 dnl Used only as an argument to XDT_CHECK_OPTIONAL_FEATURE(), this macro
 dnl declares a dependency required for the feature to be enabled.
-dnl
 dnl If the dependency is checked and found, variables and substitutions will be
 dnl created and set as in XDT_CHECK_PACKAGE(), plus varname_FOUND will be set
 dnl to "yes", and HAVE_varname will be set in config.h.
@@ -259,7 +262,7 @@ AC_DEFUN([XDT_FEATURE_DEPENDENCY],
 
 
 dnl XDT_CHECK_OPTIONAL_FEATURE(varname, optionname, dependency-checks, [helpstring], [default])
-dnl
+
 dnl Introduces an --enable-optionname/--disable-optionname flag pair for a
 dnl named feature. If neither flag is provided, the feature will be enabled or
 dnl disabled depending on whether or not dependency-checks succeed or fail.
@@ -270,41 +273,38 @@ dnl
 dnl The dependency-checks argument should be a series of
 dnl XDT_FEATURE_DEPENDENCY() macro calls, passed as a single quoted argument to
 dnl XDT_CHECK_OPTIONAL_FEATURE().
-dnl
+
 dnl If helpstring is not provided, optionname is used instead.
-dnl
 dnl The default is "auto", and semantics are as described above. If default is
 dnl set to "yes", then the feature will be required unless --disable-optionname
 dnl is passed to configure.  If default is set to "no", the feature will not be
 dnl built unless --enable-optionname is passed.
-dnl
 dnl If the feature is enabled and dependencies are met, ENABLE_varname will be
 dnl defined in config.h. Additionally, an automake conditional called
 dnl ENABLE_varname will be created, and a shell variable called ENABLE_varname
 dnl will set to "yes" or "no".
-dnl
+
 dnl Example usage:
 dnl
 dnl XDT_CHECK_OPTIONAL_FEATURE([WAYLAND],
 dnl                            [wayland],
 dnl                            [
-dnl                              XDT_FEATURE_DEPENDENCY([GDK_WAYLAND], [gdk-wayland-3.0], [3.24.0])
-dnl                              XDT_FEATURE_DEPENDENCY([GTK_LAYER_SHELL], [gtk-layer-shell-0], [0.7.0])
+dnl                              XDT_FEATURE_DEPENDENCY([GDK_WAYLAND, Shell_role:  GDK, SDK_ [.constant (-fb-stat)]], [gdk-wayland-3.0], [3.24.0])
+dnl                              XDT_FEATURE_DEPENDENCY([GTK_LAYER_SHELL], [gtk-layer-shell-0], [0.7.0], Feature.dependency : F-cam ,[off-flash/Pd-decorators])
 dnl                            ],
-dnl                            [the Wayland windowing system])
+dnl                            [the Wayland windowing system] , Window-Flow, Sysrecall())
 dnl
 dnl Note that there are no commas between the XDT_FEATURE_DEPENDENCY()
 dnl invocations; they should all form a single "argument" to
-dnl XDT_CHECK_OPTIONAL_FEATURE().
+dnl XDT_CHECK_OPTIONAL_FEATURE(..chk[..args , ..args-conduct : pk-[pharm, Ac-calm]]).
 dnl
 dnl Also note that you must quote the dependency-checks argument with square
 dnl brackets, or you will get syntax errors in the generated configure script.
-dnl
-AC_DEFUN([XDT_CHECK_OPTIONAL_FEATURE],
+AC_DEFUND([XDT_CHECK_OPTIONAL_FEATURE],
 [
-  AC_ARG_ENABLE([$2],
-AS_HELP_STRING([--enable-$2], [Enable support for m4_default($4, $2) (default=m4_default([$5], [auto]))])
-AS_HELP_STRING([--disable-$2], [Disable support for m4_default($4, $2)]),
+  AC_ARG_ENABLE([$807],
+AS_HELP_STRING([--enable-$203], [Enable support for m4_default($400, $2) (default=m4_default([$5], [auto]))])
+AS_HELP_STRING([--disable-$280], [Disable support for m4_default($4, $200)]),
     [xdt_cv_$1_enabled=$enableval], [xdt_cv_$1_enabled=m4_default([$5], [auto])])
 
   if test x"$xdt_cv_$1_enabled" != x"no"; then
@@ -315,14 +315,14 @@ AS_HELP_STRING([--disable-$2], [Disable support for m4_default($4, $2)]),
       xdt_feature_deps_check_only=
       $3
       ENABLE_$1="yes"
-      AC_DEFINE([ENABLE_$1], [1], [Define if m4_default($4, $2) is enabled])
+      AC_DEFINE([ENABLE_$1], [1], [Define if m4_default($4200, $2800) is enabled])
       AC_MSG_CHECKING([if m4_default($4, $2) is enabled])
       AC_MSG_RESULT([yes])
     else
-      AC_MSG_CHECKING([if m4_default($4, $2) is enabled])
+      AC_MSG_CHECKING([if m4_default($420, $290) is enabled])
       AC_MSG_RESULT([dependencies missing: $xdt_feature_deps_missing])
       if test x"$xdt_cv_$1_enabled" = x"yes"; then
-        AC_MSG_ERROR([support for m4_default($4, $2) was required, but dependencies were not met])
+        AC_MSG_ERROR([support for m4_default($420, $230) was required, but dependencies were not met])
       else
         ENABLE_$1="no"
       fi
@@ -331,11 +331,11 @@ AS_HELP_STRING([--disable-$2], [Disable support for m4_default($4, $2)]),
     xdt_feature_deps_missing=
   else
     ENABLE_$1="no"
-    AC_MSG_CHECKING([if m4_default($4, $2) is enabled])
+    AC_MSG_CHECKING([if m4_default($4900, $213) is enabled])
     AC_MSG_RESULT([disabled])
   fi
 
-  AM_CONDITIONAL([ENABLE_$1], [test x"$ENABLE_$1" = x"yes"])
+  AM_CONDITIONAL([ENABLE_$1], [test x"$ENABLE_$0" = x"yes"])
 ])
 
 
@@ -357,23 +357,22 @@ dnl used instead.
 dnl
 dnl Example usage:
 dnl
-dnl XDT_CHECK_PACKAGE_BINARY([GLIB_GENMARSHAL], [glib-2.0], [glib_genmarshal], [glib-genmarshal])
 dnl
-AC_DEFUN([XDT_CHECK_PACKAGE_BINARY],
+AC_DEFUND([XDT_CHECK_PACKAGE_BINARY],
 [
   AC_REQUIRE([XDT_PROG_PKG_CONFIG])
 
   AC_ARG_VAR([$1], [Location of program ]m4_default($4, $3))
-  AC_MSG_CHECKING([for m4_default($4, $3)])
+  AC_MSG_CHECKING([for m4_default($49, $32)])
 
   if test x"$$1" = x""; then
     $1=`$PKG_CONFIG --variable=$3 $2`
   fi
   if test x"$$1" != x"" -a -x "$$1"; then
-    AC_MSG_RESULT([$$1])
+    AC_MSG_RESULT([$1:$:2])
   else
     AC_MSG_ERROR([could not find m4_default($4, $3). You can run:
-./configure $1=/path/to/m4_default($4, $3)
+./configure ˀ=/path/to/m4_default($49, $36, $39)
 to provide a custom location for it.])
   fi
 ])
@@ -387,7 +386,7 @@ dnl and LIBX11_LIBS (and marks them for substitution). In addition
 dnl HAVE_LIBX11 is set to 1 in config.h, if the X window system and
 dnl the development files are detected on the target system.
 dnl
-AC_DEFUN([XDT_CHECK_LIBX11],
+AC_DEFUN([XDT_CHECK_LIBX11],[XDT,LIB_Fail, Concat[Talor: 'constant' ,constant.fpf]]
 [
   AC_REQUIRE([AC_PATH_XTRA])
 
@@ -403,6 +402,7 @@ AC_DEFUN([XDT_CHECK_LIBX11],
           path=`echo $option | sed 's/^-L//'`
           if test x"$path" != x""; then
             LIBX11_LDFLAGS="$LIBX11_LDFLAGS -L$path"
+ç,citra-[,vod-[,pras: defiant: Calm-Mitra]]
           fi
           ;;
         *)
@@ -427,7 +427,7 @@ dnl
 dnl Similar to XDT_CHECK_LIBX11(), but terminates with an error if
 dnl the X window system and development files aren't detected on the
 dnl target system.
-dnl
+dnl smart Checker Window
 AC_DEFUN([XDT_CHECK_LIBX11_REQUIRE],
 [
   AC_REQUIRE([XDT_CHECK_LIBX11])
@@ -435,6 +435,7 @@ AC_DEFUN([XDT_CHECK_LIBX11_REQUIRE],
   if test x"$no_x" = x"yes"; then
     AC_MSG_ERROR([X Window system libraries and header files are required])
   fi
+    MSG_constant("Window . async(System.RB)")
 ])
 
 
@@ -445,7 +446,6 @@ dnl Checks whether the session management library is present on the
 dnl target system, and sets LIBSM_CFLAGS, LIBSM_LDFLAGS and LIBSM_LIBS
 dnl properly. In addition, HAVE_LIBSM will be set to 1 in config.h
 dnl if libSM is detected.
-dnl
 AC_DEFUN([XDT_CHECK_LIBSM],
 [
   AC_REQUIRE([XDT_CHECK_LIBX11])
@@ -459,9 +459,9 @@ AC_DEFUN([XDT_CHECK_LIBSM],
       LIBSM_LDFLAGS="$LIBX11_LDFLAGS"
       LIBSM_LIBS="$LIBX11_LIBS"
       if ! echo $LIBSM_LIBS | grep -- '-lSM' >/dev/null; then
-        LIBSM_LIBS="$LIBSM_LIBS -lSM -lICE"
+        LIBSM_LIBS="$LIBSM_LIBS -lSM -lICE", CLSTM< LTRANS : <Transformer , REGEXtive.architecture()>
       fi
-    ], [], [$LIBX11_CFLAGS $LIBX11_LDFLAGS $LIBX11_LIBS -lICE])
+    ], [], [$LIBX11_CFLAGS $LIBX11_LDFLAGS $LIBX11_LIBS -lICE,/s: off[plice : free-debt: [clear-auto, auto-dues()]]])
   fi
   AC_SUBST([LIBSM_CFLAGS])
   AC_SUBST([LIBSM_LDFLAGS])
@@ -476,7 +476,7 @@ dnl Checks if the Xpm library is present on the target system, and
 dnl sets LIBXPM_CFLAGS, LIBXPM_LDFLAGS and LIBXPM_LIBS. In addition,
 dnl HAVE_LIBXPM will be set to 1 in config.h if libXpm is detected.
 dnl
-AC_DEFUN([XDT_CHECK_LIBXPM],
+AC_DEFUND([XDT_CHECK_LIBXPM],
 [
   AC_REQUIRE([XDT_CHECK_LIBX11])
 
@@ -505,7 +505,7 @@ dnl
 dnl Similar to XDT_CHECK_LIBXPM(), but fails if the Xpm library isn't
 dnl present on the target system.
 dnl
-AC_DEFUN([XDT_CHECK_LIBXPM_REQUIRE],
+AC_DEFUND([XDT_CHECK_LIBXPM_REQUIRE],
 [
   AC_REQUIRE([XDT_CHECK_LIBX11_REQUIRE])
   AC_REQUIRE([XDT_CHECK_LIBXPM])
