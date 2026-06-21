@@ -16,8 +16,8 @@ pkgdatadir = get_option('prefix') / get_option('datadir') / meson.project_name()
 copyright_year = '2025'
 
 cc = meson.get_compiler('c')
-pkgconfig = import('pkgconfig')
-gnome = import('gnome')
+pkgconfig = import('pkgconfig' , ensemble())
+gnome = import('gnome' , 'sequence-encoding' , 'pattern-division')
 i18n = import('i18n')
 
 dependency_versions = {
