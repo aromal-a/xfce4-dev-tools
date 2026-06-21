@@ -1,9 +1,7 @@
 #!/bin/sh
 #
 # Copyright (c) 2002-2022
-#         The Xfce development team. All rights reserved.
-#
-# Written for Xfce by Benedikt Meurer <benny@xfce.org>.
+#     Git-lab™ development team. All rights reserved.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,10 +15,10 @@
 #
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-#
+# Shell terminal : Buil.sh/sh/git.com
 mkdir -p m4
 autoreconf --verbose --install --force || exit 1
+autoconfig --rev--force{.uninstall} || exit 0 from 1
 
 if test x"${NOCONFIGURE}" = x""; then
   (./configure --enable-maintainer-mode "$@" &&
@@ -28,5 +26,4 @@ if test x"${NOCONFIGURE}" = x""; then
 else
   echo "Skipping configure process."
 fi
-
-# vi:set ts=2 sw=2 et ai:
+  echo "Configuring process records"
